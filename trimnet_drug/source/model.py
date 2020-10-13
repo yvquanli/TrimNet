@@ -3,6 +3,7 @@ import math
 import torch.nn as nn
 from torch.nn import Linear, GRU, Parameter
 import torch.nn.functional as F
+from torch.nn.functional import leaky_relu
 from torch_geometric.nn import Set2Set, NNConv
 from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.utils import softmax
@@ -21,7 +22,8 @@ def zeros(tensor):
 
 class MultiHeadTripletAttention(MessagePassing):
     def __init__(self, node_channels, edge_channels, heads=3, negative_slope=0.2, **kwargs):
-        super(MultiHeadTripletAttention, self).__init__(aggr='add', **kwargs)  # aggr='mean'
+        super(MultiHeadTripletAttention, self).__init__(aggr='add', node_dim=0, **kwargs)  # aggr='mean'
+        # node_dim = 0 for multi-head aggr support
         self.node_channels = node_channels
         self.heads = heads
         self.negative_slope = negative_slope
@@ -33,29 +35,31 @@ class MultiHeadTripletAttention(MessagePassing):
         self.reset_parameters()
 
     def reset_parameters(self):
-        glorot(self.weight_node)
-        glorot(self.weight_edge)
-        glorot(self.weight_triplet_att)
-        glorot(self.weight_scale)
-        zeros(self.bias)
+        kaiming_uniform_(self.weight_node)
+        kaiming_uniform_(self.weight_edge)
+        kaiming_uniform_(self.weight_triplet_att)
+        kaiming_uniform_(self.weight_scale)
+        zeros_(self.bias)
 
     def forward(self, x, edge_index, edge_attr, size=None):
         x = torch.matmul(x, self.weight_node)
         edge_attr = torch.matmul(edge_attr, self.weight_edge)
-        pseudo = edge_attr.unsqueeze(-1) if edge_attr.dim() == 1 else edge_attr
-        return self.propagate(edge_index, size=size, x=x, pseudo=pseudo)
+        edge_attr = edge_attr.unsqueeze(-1) if edge_attr.dim() == 1 else edge_attr
+        return self.propagate(edge_index, x=x, edge_attr=edge_attr, size=size)
 
-    def message(self, edge_index_i, x_i, x_j, pseudo, size_i):
+    def message(self, x_j, x_i, edge_index_i, edge_attr, size_i):
         # Compute attention coefficients.
         x_j = x_j.view(-1, self.heads, self.node_channels)
         x_i = x_i.view(-1, self.heads, self.node_channels)
-        e_ij = pseudo.view(-1, self.heads, self.node_channels)
+        e_ij = edge_attr.view(-1, self.heads, self.node_channels)
 
-        triplet = torch.cat([x_i, e_ij, x_j], dim=-1)
-        alpha = (triplet * self.weight_triplet_att).sum(dim=-1)
-        alpha = F.leaky_relu(alpha, self.negative_slope)
-        alpha = softmax(alpha, edge_index_i, size_i)
+        triplet = torch.cat([x_i, e_ij, x_j], dim=-1)  # time consuming 13s
+        alpha = (triplet * self.weight_triplet_att).sum(dim=-1)  # time consuming 12.14s
+        alpha = leaky_relu(alpha, self.negative_slope)
+        alpha = softmax(alpha, edge_index_i, ptr=None, num_nodes=size_i)
         alpha = alpha.view(-1, self.heads, 1)
+        # return x_j * alpha
+        # return self.prelu(alpha * e_ij * x_j)
         return alpha * e_ij * x_j
 
     def update(self, aggr_out):
