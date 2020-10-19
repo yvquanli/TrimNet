@@ -4,6 +4,7 @@ from torch.nn.init import kaiming_uniform_, zeros_
 from torch.nn import Linear, Sequential, GRU
 import torch.nn.functional as F
 from torch.nn.functional import leaky_relu
+from torch.nn.init import kaiming_uniform_, zeros_
 
 from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.utils import softmax
