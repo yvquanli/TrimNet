@@ -7,6 +7,7 @@ from torch.nn.functional import leaky_relu
 from torch_geometric.nn import Set2Set, NNConv
 from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.utils import softmax
+from torch.nn.init import kaiming_uniform_, zeros_
 
 
 def glorot(tensor):
