@@ -47,3 +47,9 @@ usage: python run.py [-h] [--data DATA] [--dataset DATASET] [--seed SEED]
 
 * **Yuquan Li** - *Initial work, model design, benckmark on the qm9 dataset* - [Yuquan](https://github.com/yvquanli)
 * **Pengyong Li** - *Model design, benckmark on drug datasets and CPI datasets* - [Pengyong](https://github.com/pyli0628)
+
+## Citation
+
+Pengyong L, Yuquan L, Chang-Yu H, et al. TrimNet: learning molecular representation from triplet messages for biomedicine[J]. Briefings in bioinformatics, 2020.
+
+
