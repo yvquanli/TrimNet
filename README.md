@@ -50,6 +50,6 @@ usage: python run.py [-h] [--data DATA] [--dataset DATASET] [--seed SEED]
 
 ## Citation
 
-Pengyong L, Yuquan L, Chang-Yu H, et al. TrimNet: learning molecular representation from triplet messages for biomedicine[J]. Briefings in bioinformatics, 2020.
+Pengyong Li, Yuquan Li, Chang-Yu Hsieh, et al. TrimNet: learning molecular representation from triplet messages for biomedicine[J]. Briefings in bioinformatics, 2020.
 
 
