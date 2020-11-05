@@ -52,4 +52,19 @@ usage: python run.py [-h] [--data DATA] [--dataset DATASET] [--seed SEED]
 
 Pengyong Li, Yuquan Li, Chang-Yu Hsieh, et al. TrimNet: learning molecular representation from triplet messages for biomedicine[J]. Briefings in bioinformatics, 2020.
 
+@article{10.1093/bib/bbaa266,
+    author = {Li, Pengyong and Li, Yuquan and Hsieh, Chang-Yu and Zhang, Shengyu and Liu, Xianggen and Liu, Huanxiang and Song, Sen and Yao, Xiaojun},
+    title = "{TrimNet: learning molecular representation from triplet messages for biomedicine}",
+    journal = {Briefings in Bioinformatics},
+    year = {2020},
+    month = {11},
+    issn = {1477-4054},
+    doi = {10.1093/bib/bbaa266},
+    url = {https://doi.org/10.1093/bib/bbaa266},
+    note = {bbaa266},
+}
+
+
+
+
 
