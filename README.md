@@ -8,7 +8,7 @@ TrimNet can accurately complete multiple molecular properties prediction tasks w
 
 ```
 PyTorch >= 1.4.0
-torch-gemetric >= 1.3.2
+torch-geometric >= 1.3.2
 rdkit >= '2019.03.4'
 ```
 
@@ -17,7 +17,7 @@ rdkit >= '2019.03.4'
 **For quantum dataset**
 ```sh
 git clone https://github.com/yvquanli/trimnet
-cd ./TripNet/tripnet_quantum/src
+cd ./TrimNet/trimnet_quantum/src
 # download dataset from https://s3-us-west-1.amazonaws.com/deepchem.io/datasets/molnet_publish/qm9.zip
 # unzip the file to trimnet_quantum/dataset/raw
 python run.py
@@ -50,7 +50,8 @@ usage: python run.py [-h] [--data DATA] [--dataset DATASET] [--seed SEED]
 
 ## Citation
 
-Pengyong Li, Yuquan Li, Chang-Yu Hsieh, et al. TrimNet: learning molecular representation from triplet messages for biomedicine[J]. Briefings in bioinformatics, 2020.
+Pengyong Li, Yuquan Li, Chang-Yu Hsieh, et al. TrimNet: learning molecular representation from 
+let messages for biomedicine[J]. Briefings in bioinformatics, 2020.
 
 @article{10.1093/bib/bbaa266,  
     author = {Li, Pengyong and Li, Yuquan and Hsieh, Chang-Yu and Zhang, Shengyu and Liu, Xianggen and Liu, Huanxiang and Song, Sen and Yao, Xiaojun},  
