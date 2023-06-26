@@ -1,0 +1,27 @@
+name: Pipeline
+
+on:
+  push:
+    branches:
+      - ci/cd
+
+jobs:
+
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.x
+
+    - name: Install Dependencies
+      run: pip install flake8
+
+    - name: Lint with flake8
+      run: flake8 .
+
