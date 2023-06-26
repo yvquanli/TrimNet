@@ -10,7 +10,7 @@ from dataset import load_dataset_scaffold, load_dataset_random, load_dataset_ran
 
 def train():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data", type=str, default='../data/', help="all data dir")
+    parser.add_argument("--data", type=str, default='trimnet_drug/data/', help="all data dir")
     parser.add_argument("--dataset", type=str, default='bace', help="muv,tox21,toxcast,sider,clintox,hiv,bace,bbbp")
     parser.add_argument('--seed', default=68, type=int)
     parser.add_argument("--gpu", type=int, nargs='+', default=0, help="CUDA device ids")
