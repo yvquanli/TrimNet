@@ -6,42 +6,82 @@ on:
       - ci/cd
 
 jobs:
-  # lint:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+  
+   lint:
+     runs-on: ubuntu-latest
+     steps:
+       - name: Checkout Repository
+         uses: actions/checkout@v2
 
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v2
-  #       with:
-  #         python-version: 3.x
+       - name: Set up Python
+         uses: actions/setup-python@v2
+         with:
+           python-version: 3.x
 
-  #     - name: Install Dependencies
-  #       run: pip install flake8
+       - name: Install Dependencies
+         run: pip install flake8
 
-  #     - name: Lint with flake8
-  #       run: flake8 ./trimnet_drug
+       - name: Lint with flake8
+         run: flake8 ./trimnet_drug
 
-  # build:
-  #   needs: lint
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
+   build:
+     needs: lint
+     runs-on: ubuntu-latest
+     steps:
+       - name: Checkout Repository
+         uses: actions/checkout@v2
 
-  #     - name: Build Docker Image
-  #       run: docker build -t lramon2001/trimnet_drug:1.0.0 .
+       - name: Build Docker Image
+         run: docker build -t lramon2001/trimnet_drug:1.0.0 .
 
-  #     - name: Log into Docker Hub
-  #       run: echo ${{ secrets.DOCKERHUB_TOKEN}} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+       - name: Log into Docker Hub
+         run: echo ${{ secrets.DOCKERHUB_TOKEN}} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-  #     - name: Push Docker Image to Docker Hub
-  #       run: docker push lramon2001/trimnet_drug:1.0.0
-  documentation:
-    runs-on: ubuntu-latest
+       - name: Push Docker Image to Docker Hub
+         run: docker push lramon2001/trimnet_drug:1.0.0
+         
+   documentation:
+      needs: build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout Repository
+          uses: actions/checkout@v2
 
-    steps:
+        - name: Set up Python
+          uses: actions/setup-python@v2
+          with:
+            python-version: 3.x
+
+        - name: Install Sphinx
+          run: pip install sphinx
+
+        - name: Create Source Directory
+          run: mkdir -p docs/source
+
+        - name: Create index.rst
+          run: echo "Welcome to My Project Documentation!" > docs/source/index.rst
+
+        - name: Generate Documentation
+          run: |
+            sphinx-build -b html /home/runner/work/TrimNet/TrimNet/docs/source /home/runner/work/TrimNet/TrimNet/trimnet_drug/docs/build/html
+          working-directory: ./trimnet_drug
+
+        - name: Upload Documentation
+          uses: actions/upload-artifact@v2
+          with:
+            name: Documentation
+            path: ./trimnet_drug/docs/build/html
+
+        - name: Deploy to GitHub Pages
+          uses: peaceiris/actions-gh-pages@v3
+          env:
+            github_token: ${{ secrets.GITHUB_TOKEN }}
+            publish_dir: ./trimnet_drug/docs/build/html
+
+   deploy:
+      needs: documentation
+      runs-on: ubuntu-latest
+      steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
@@ -50,30 +90,20 @@ jobs:
         with:
           python-version: 3.x
 
-      - name: Install Sphinx
-        run: pip install sphinx
+      - name: Install Dependencies
+        run: ls && pip install -r requirements.txt
 
-      - name: Create Source Directory
-        run: mkdir -p trimnet_drug/docs/source
-
-      - name: Create index.rst
-        run: echo "Welcome to My Project Documentation!" > trimnet_drug/docs/source/index.rst
-
-      - name: Generate Documentation
+      - name: Build and Upload Package to PyPI
         run: |
-          sphinx-build -b html docs/source trimnet_drug/docs/build/html
-        working-directory: ./trimnet_drug
+          pip install setuptools
+          pip install wheel
+          python setup.py sdist bdist_wheel
+          pip install twine
+          twine upload --username $TWINE_USERNAME --password $TWINE_PASSWORD dist/*
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
 
-      - name: Upload Documentation
-        uses: actions/upload-artifact@v2
-        with:
-          name: Documentation
-          path: ./trimnet_drug/docs/build/html
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./trimnet_drug/docs/build/html
 
 
