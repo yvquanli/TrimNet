@@ -18,7 +18,6 @@ def load_dataset_random_nan(path, dataset, seed, tasks=None):
     if os.path.isfile(save_path):
         trn, val, test = torch.load(save_path)
         return trn, val, test
-    
     df = pd.read_csv(os.path.join(path, "raw/{}.csv".format(dataset)))
     smilesList = df.smiles.values
     print("number of all smiles: ", len(smilesList))
@@ -131,7 +130,7 @@ def load_dataset_random(path, dataset, seed, tasks=None):
         trn.weights = weights
 
     elif (
-        dataset == "esol" or dataset == "freesolv" or 
+        dataset == "esol" or dataset == "freesolv" or
         dataset == "lipophilicity"
     ):  # 黎育权：esol  freesolv lip support
         train_size = int(0.8 * len(pyg_dataset))

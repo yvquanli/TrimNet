@@ -6,22 +6,74 @@ on:
       - ci/cd
 
 jobs:
+  # lint:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
 
-  lint:
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v2
+  #       with:
+  #         python-version: 3.x
+
+  #     - name: Install Dependencies
+  #       run: pip install flake8
+
+  #     - name: Lint with flake8
+  #       run: flake8 ./trimnet_drug
+
+  # build:
+  #   needs: lint
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Build Docker Image
+  #       run: docker build -t lramon2001/trimnet_drug:1.0.0 .
+
+  #     - name: Log into Docker Hub
+  #       run: echo ${{ secrets.DOCKERHUB_TOKEN}} | docker login -u ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+  #     - name: Push Docker Image to Docker Hub
+  #       run: docker push lramon2001/trimnet_drug:1.0.0
+  documentation:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@v2
+      - name: Checkout Repository
+        uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: 3.x
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.x
 
-    - name: Install Dependencies
-      run: pip install flake8
+      - name: Install Sphinx
+        run: pip install sphinx
 
-    - name: Lint with flake8
-      run: flake8 .
+      - name: Create Source Directory
+        run: mkdir -p trimnet_drug/docs/source
+
+      - name: Create index.rst
+        run: echo "Welcome to My Project Documentation!" > trimnet_drug/docs/source/index.rst
+
+      - name: Generate Documentation
+        run: |
+          sphinx-build -b html docs/source trimnet_drug/docs/build/html
+        working-directory: ./trimnet_drug
+
+      - name: Upload Documentation
+        uses: actions/upload-artifact@v2
+        with:
+          name: Documentation
+          path: ./trimnet_drug/docs/build/html
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./trimnet_drug/docs/build/html
+
 

@@ -152,7 +152,6 @@ class Trainer:
                     y_pred_list[i].extend(y_pred)
 
             loss.backward()
-          
             self.optimizer.step()
             losses.append(loss.item())
 

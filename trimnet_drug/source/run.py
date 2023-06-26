@@ -35,7 +35,7 @@ def train():
         "--batch_size", type=int, default=128, help="number of batch_size"
     )
     parser.add_argument("--epochs", type=int, default=200,
-                        help="number of epochs") 
+                        help="number of epochs")
     parser.add_argument("--lr", type=float, default=0.001,
                         help="learning rate of adam")
     parser.add_argument("--weight_decay", type=float, default=1e-5)
@@ -46,7 +46,7 @@ def train():
 
     parser.add_argument("--eval", default=False, action="store_true")
     parser.add_argument("--exps_dir", default="../test", type=str,
-                        help="out dir") 
+                        help="out dir")
     parser.add_argument("--exp_name", default=None, type=str)
 
     d = vars(parser.parse_args())
