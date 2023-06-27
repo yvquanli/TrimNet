@@ -5,7 +5,7 @@ with open("requirements.txt", "r") as f:
 
 setup(
     name="trimnet",
-    version="1.0.4",
+    version='1.0.7',
     description="Your library description",
     author="Your Name",
     packages=["trimnet_drug"],

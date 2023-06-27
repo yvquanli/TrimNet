@@ -108,6 +108,8 @@ jobs:
     - name: Install Dependencies
       run: ls && pip install -r requirements.txt
 
+    - name: Update Version
+      run:  python3 update_versioning.py
     - name: Build and Upload Package to PyPI
       run: |
         pip install setuptools

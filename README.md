@@ -65,6 +65,11 @@ let messages for biomedicine[J]. Briefings in bioinformatics, 2020.
     note = {bbaa266},  
 }  
 
+## HOW USE DOCKER ON TrimNet project
+
+´´´ sudo docker build -t trimnet . ´´´
+
+´´´ sudo docker run triment . ´´´
 
 
 
